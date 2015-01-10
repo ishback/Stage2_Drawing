@@ -11,10 +11,15 @@ ArrayList <ArrayList> strokes;
 
 PImage img;
 
+int displayW = 1024;
+int displayH = 768;
+int camW = 320;
+int camH = 240;
+
 //ArrayList<ArrayList<Float>> bigList = new ArrayList<ArrayList<Float>>();
 
 void setup() {
-  size(1024/2, 768/2);
+  size(displayW, displayH);
   background(0);
   noStroke();
   points = new ArrayList<PVector>();
@@ -28,18 +33,18 @@ void draw() {
     stroke(255);
     strokeWeight(30);
     point(mouseX, mouseY);
-    println("pointer");
+    // println("pointer");
   } else if (drawing){
     stroke(255);
     strokeWeight(30);
     line(pmouseX, pmouseY, mouseX, mouseY);
     //strokes.get(strokes.size()-1).add(new PVector(mouseX, mouseY));
     points.add(new PVector(mouseX, mouseY));
-    println("drawing");
+    // println("drawing");
   } else if (drawn){
     image(img, 0, 0);
     point(mouseX, mouseY);
-    println("drawn");
+    // println("drawn");
   }
 }
 
