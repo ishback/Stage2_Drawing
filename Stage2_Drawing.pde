@@ -47,6 +47,8 @@ int counterCursorMax = 20;
 // wait with a cursor until a rectangle blob 'image sent' is detected
 boolean cursorON = true;
 
+boolean debugView;
+
 //ArrayList<ArrayList<Float>> bigList = new ArrayList<ArrayList<Float>>();
 
 void setup() {
@@ -178,6 +180,10 @@ void draw() {
     }
     counterCursor++;
   }
+  
+  if (debugView){
+    image(dst, 0, 0);
+  }
 }
 
 PVector calculateCentroid(ArrayList<PVector> points) {
@@ -263,9 +269,7 @@ void mouseReleased() {
 void keyPressed() {
   if (key == 'S' || key == 's') {
     saveFrame("/Users/ishac/Documents/Processing/nearestNeighbor2/data/sample.jpg");
-  } else if (key == 'D' || key == 'd'){
-    background(0);
-    sent = false;
-    pointer = true;
+  } else if (key == 'D' || key == 'd') {
+    debugView = !debugView;  
   }
 }
