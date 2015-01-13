@@ -27,6 +27,7 @@ void setup() {
  
 void draw() {
   //frameRate(30);
+  noCursor();
   
   if (pointer){
     background(0);
