@@ -34,8 +34,8 @@ PImage src, dst;
 OpenCV opencv;
 ArrayList<Contour> contours;
 
-int cursorMaxArea = 400;
-int cursorMinArea = 200;
+int cursorMaxArea = 500;
+int cursorMinArea = 300;
 PVector cursorExpectedCentroid = new PVector(camW/2, camH/2);
 int cursorCentroidVariability = 50;
 boolean cursorIsShowing = false;
@@ -49,7 +49,7 @@ boolean cursorON = true;
 
 boolean debugView;
 
-int strokeWidth = 10;
+int strokeWidth = 30;
 
 //ArrayList<ArrayList<Float>> bigList = new ArrayList<ArrayList<Float>>();
 
@@ -60,12 +60,12 @@ void setup() {
   String[] ards = Arduino.list();
   println(ards);
   // for Mac
-  arduino = new Arduino(this, ards[ards.length - 1], 57600);
+  // arduino = new Arduino(this, ards[ards.length - 1], 57600);
   // for Odroid
-//  arduino = new Arduino(this, ards[ards.length - 1], 57600);
+  arduino = new Arduino(this, "/dev/ttyACM0", 57600);
   arduino.pinMode(4, Arduino.INPUT);
   
-  cam = new Capture(this, camW, camH);
+  cam = new Capture(this, camW, camH, "/dev/video0", 30);
 
   cam.start();
   
