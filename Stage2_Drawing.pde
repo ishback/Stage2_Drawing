@@ -62,7 +62,7 @@ void setup() {
   // for Mac
   // arduino = new Arduino(this, ards[ards.length - 1], 57600);
   // for Odroid
-  arduino = new Arduino(this, "/dev/ttyACM0", 57600);
+  arduino = new Arduino(this, ards[0], 57600);
   arduino.pinMode(4, Arduino.INPUT);
   
   cam = new Capture(this, camW, camH, "/dev/video0", 30);
@@ -82,6 +82,8 @@ void setup() {
 }
  
 void draw() {
+  noCursor();
+  noStroke();
   if (cam.available()) { 
     // Reads the new frame
     cam.read();
@@ -167,6 +169,8 @@ void draw() {
   } else if (drawn){
 //    println("DRAWN");
     image(img, 0, 0);
+    stroke(255);
+    strokeWeight(strokeWidth);
     point(mouseX, mouseY);
     // println("drawn");
   } 
