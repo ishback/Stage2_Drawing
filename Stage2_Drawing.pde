@@ -28,7 +28,7 @@ void setup() {
 void draw() {
   //frameRate(30);
   noCursor();
-  
+  noStroke();
   if (pointer){
     background(0);
     stroke(255);
