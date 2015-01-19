@@ -18,6 +18,8 @@ boolean sending = false;
 boolean waiting = false;
 boolean sent = false;
 
+int lastMouseMoved = 0;
+
 ArrayList<PVector> points;
 ArrayList <ArrayList> strokes;
 
@@ -34,12 +36,12 @@ PImage src, dst;
 OpenCV opencv;
 ArrayList<Contour> contours;
 
-int cursorMaxArea = 500;
-int cursorMinArea = 300;
+int cursorMaxArea = 2200;
+int cursorMinArea = 800;
 PVector cursorExpectedCentroid = new PVector(camW/2, camH/2);
 int cursorCentroidVariability = 50;
 boolean cursorIsShowing = false;
-int cursorWaitTime = 2000;
+int cursorWaitTime = 3000;
 int cursorCountStartTime = 0;
 
 int counterCursor = 0;
@@ -48,7 +50,7 @@ int counterCursorMax = 20;
 boolean cursorON = true;
 
 boolean debugView;
-
+boolean editMode = false;
 int strokeWidth = 30;
 
 //ArrayList<ArrayList<Float>> bigList = new ArrayList<ArrayList<Float>>();
@@ -58,7 +60,7 @@ void setup() {
   background(0);
   frameRate(30);
   String[] ards = Arduino.list();
-  println(ards);
+  //println(ards);
   // for Mac
   // arduino = new Arduino(this, ards[ards.length - 1], 57600);
   // for Odroid
@@ -82,7 +84,11 @@ void setup() {
 }
  
 void draw() {
-  noCursor();
+  if(!editMode) {
+    noCursor();
+  } else {
+    cursor();
+  }
   noStroke();
   if (cam.available()) { 
     // Reads the new frame
@@ -102,7 +108,7 @@ void draw() {
   // threshold using only the red pixels
   float thresh = map(arduino.analogRead(potPin), 0, 1024, 0, 255);
   redThreshold(out, thresh);
-  
+  //println("thres " + thresh);
   opencv.loadImage(out);
   
   // draw the warped and thresholded image
@@ -125,11 +131,11 @@ void draw() {
 //    }
     noStroke();
     // resize bb
-    // println("rectArea: " + getArea(bb));
+    // //println("rectArea: " + getArea(bb));
     int area = getArea(bb);
-    println("area: " + area);
-    println("centroid: " + centroid);
-    println("dist: " + PVector.dist(centroid, cursorExpectedCentroid));
+    //println("area: " + area);
+    //println("centroid: " + centroid);
+    //println("dist: " + PVector.dist(centroid, cursorExpectedCentroid));
     if (area < cursorMaxArea && area > cursorMinArea && PVector.dist(centroid, cursorExpectedCentroid) < cursorCentroidVariability) {
       // this is a cursor
       cursorCountStartTime = millis();
@@ -152,31 +158,31 @@ void draw() {
   
   // do drawing stuff
   if (pointer){
-//    println("POINTER");
+//    //println("POINTER");
     background(0);
     stroke(255);
     strokeWeight(strokeWidth);
     point(mouseX, mouseY);
-    // println("pointer");
+    // //println("pointer");
   } else if (drawing){
-//    println("DRAWING");
+//    //println("DRAWING");
     stroke(255);
     strokeWeight(strokeWidth);
     line(pmouseX, pmouseY, mouseX, mouseY);
     //strokes.get(strokes.size()-1).add(new PVector(mouseX, mouseY));
     points.add(new PVector(mouseX, mouseY));
-    // println("drawing");
+    // //println("drawing");
   } else if (drawn){
-//    println("DRAWN");
+//    //println("DRAWN");
     image(img, 0, 0);
     stroke(255);
     strokeWeight(strokeWidth);
     point(mouseX, mouseY);
-    // println("drawn");
+    // //println("drawn");
   } 
   
   if (waiting){
-//    println("WAITING");
+//    //println("WAITING");
     background(0);
     if (counterCursor == counterCursorMax){
       cursorON = !cursorON;
@@ -194,6 +200,15 @@ void draw() {
   if (debugView){
     image(dst, 0, 0);
   }
+  
+  if (millis() - lastMouseMoved < 2000) {
+    stroke(255);
+    strokeWeight(strokeWidth);
+    point(mouseX, mouseY);
+  } else {
+   
+  } 
+
 }
 
 PVector calculateCentroid(ArrayList<PVector> points) {
@@ -241,7 +256,7 @@ int getArea(Rectangle r){
 void mousePressed() {
   if (mouseButton == LEFT) {
     if (pointer){
-//      println("MOUSEUP - POINTER");
+//      //println("MOUSEUP - POINTER");
       background(0);
       waiting = false;
       cursorCountStartTime = millis();
@@ -252,7 +267,7 @@ void mousePressed() {
       points.add(new PVector(mouseX, mouseY));
       point(mouseX, mouseY);
     } else if (drawn){
-//      println("DRAWN");
+//      //println("DRAWN");
       background(0);
       image(img, 0, 0);
       drawing = true;
@@ -280,4 +295,11 @@ void keyPressed() {
   if (key == 'D' || key == 'd') {
     debugView = !debugView;  
   }
+  if (key == 'S' || key == 's') {
+    editMode = !editMode;  
+  }
+}
+
+void mouseMoved() {
+  lastMouseMoved=millis();
 }
