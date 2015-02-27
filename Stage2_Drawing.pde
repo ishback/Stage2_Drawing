@@ -25,7 +25,7 @@ ArrayList <ArrayList> strokes;
 
 PImage img;
 
-Arduino arduino;
+//Arduino arduino;
 int buttonPin = 4;
 int potPin = 0;
 
@@ -59,13 +59,13 @@ void setup() {
   size(displayW, displayH);
   background(0);
   frameRate(30);
-  String[] ards = Arduino.list();
+//  String[] ards = Arduino.list();
   //println(ards);
   // for Mac
   // arduino = new Arduino(this, ards[ards.length - 1], 57600);
   // for Odroid
-  arduino = new Arduino(this, ards[0], 57600);
-  arduino.pinMode(4, Arduino.INPUT);
+//  arduino = new Arduino(this, ards[0], 57600);
+//  arduino.pinMode(4, Arduino.INPUT);
   
   cam = new Capture(this, camW, camH, "/dev/video0", 30);
 
@@ -106,7 +106,7 @@ void draw() {
   out = attention.focus(cam, cam.width, cam.height);
   
   // threshold using only the red pixels
-  float thresh = map(arduino.analogRead(potPin), 0, 1024, 0, 255);
+  float thresh = map(mouseY, 0, 768, 0, 255);
   redThreshold(out, thresh);
   //println("thres " + thresh);
   opencv.loadImage(out);
